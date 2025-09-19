@@ -9,8 +9,8 @@ Este projeto prevê o risco de churn de clientes de e-commerce a partir de dados
 - Streamlit
 
 ## 📂 Estrutura
-PROJETO_CHURN/
-  ├── app.py # Aplicação Streamlit
+PROJETO_CHURN /
+  |── app.py # Aplicação Streamlit
   ├── requirements.txt # Dependências
   ├── data/
   ├  ── Previsao_Churn.csv # Dataset base
