@@ -14,7 +14,7 @@ projeto-churn/
 ├── app.py # Aplicação Streamlit
 ├── requirements.txt # Dependências
 ├── data/
-│ └── Previsao_Churn.csv # Dataset base
+│ ── Previsao_Churn.csv # Dataset base
 └── notebooks/
 └── EDA_Modelagem.ipynb # Análises exploratórias (opcional)
 
