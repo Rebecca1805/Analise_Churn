@@ -107,26 +107,22 @@ colunas_obrigatorias = [
     "Desconto_Aplicado", "Dias_Sem_Compra", "Nivel_Satisfacao"
 ]
 
-if uploaded_file is not None:
-    df_input = pd.read_csv(uploaded_file)
-    
-    faltando = [c for c in colunas_obrigatorias if c not in df_input.columns]
-    if faltando:
-        st.error(f"O arquivo está faltando as colunas: {faltando}")
-    else:
-        # segue com as previsões
-        ...
-
 
 uploaded_file = st.file_uploader("Carregue o arquivo CSV", type=["csv"])
 
 if uploaded_file is not None:
     df_input = pd.read_csv(uploaded_file)
 
-    st.subheader("📋 Resumo do Dataset Carregado")
-    st.write("Dimensão:", df_input.shape)
-    st.write("Colunas:", df_input.columns.tolist())
-    st.dataframe(df_input.head())
+    # Verificar colunas obrigatórias
+    
+    faltando = [c for c in colunas_obrigatorias if c not in df_input.columns]
+    if faltando:
+        st.error(f"O arquivo está faltando as colunas: {faltando}")
+    else:
+        st.subheader("📋 Resumo do Dataset Carregado")
+        st.write("Dimensão:", df_input.shape)
+        st.write("Colunas:", df_input.columns.tolist())
+        st.dataframe(df_input.head())
 
     # Garantir colunas consistentes
     df_input.rename(columns={
@@ -170,5 +166,6 @@ if uploaded_file is not None:
 
     st.write("### 🔑 Top Variáveis Mais Importantes")
     st.bar_chart(importancias_df.set_index("Variavel"))
+
 
 
