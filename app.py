@@ -107,24 +107,12 @@ colunas_obrigatorias = [
     "Desconto_Aplicado", "Dias_Sem_Compra", "Nivel_Satisfacao"
 ]
 
-
 uploaded_file = st.file_uploader("Carregue o arquivo CSV", type=["csv"])
 
 if uploaded_file is not None:
     df_input = pd.read_csv(uploaded_file)
 
-    # Verificar colunas obrigatórias
-    
-    faltando = [c for c in colunas_obrigatorias if c not in df_input.columns]
-    if faltando:
-        st.error(f"O arquivo está faltando as colunas: {faltando}")
-    else:
-        st.subheader("📋 Resumo do Dataset Carregado")
-        st.write("Dimensão:", df_input.shape)
-        st.write("Colunas:", df_input.columns.tolist())
-        st.dataframe(df_input.head())
-
-    # Garantir colunas consistentes
+    # Padronizar nomes de colunas
     df_input.rename(columns={
         "Customer ID": "ID_Cliente",
         "Gender": "Genero",
@@ -139,33 +127,40 @@ if uploaded_file is not None:
         "Satisfaction Level": "Nivel_Satisfacao"
     }, inplace=True)
 
-    # Fazer predições
-    preds = rf_model.predict(df_input)
-    probs = rf_model.predict_proba(df_input)[:, 1]
+    # Verificar colunas obrigatórias
+    faltando = [c for c in colunas_obrigatorias if c not in df_input.columns]
+    if faltando:
+        st.error(f"O arquivo está faltando as colunas: {faltando}")
+    else:
+        st.subheader("📋 Resumo do Dataset Carregado")
+        st.write("Dimensão:", df_input.shape)
+        st.write("Colunas:", df_input.columns.tolist())
+        st.dataframe(df_input.head())
 
-    df_input["Pred_Churn"] = preds
-    df_input["Prob_Churn"] = probs
+        # Predições
+        preds = rf_model.predict(df_input)
+        probs = rf_model.predict_proba(df_input)[:, 1]
 
-    st.subheader("🔮 Resultados das Predições")
-    st.dataframe(df_input[["ID_Cliente", "Pred_Churn", "Prob_Churn"]].head(20))
+        df_input["Pred_Churn"] = preds
+        df_input["Prob_Churn"] = probs
 
-    churn_rate = df_input["Pred_Churn"].mean() * 100
-    st.metric("Taxa de Churn Prevista", f"{churn_rate:.2f}%")
+        st.subheader("🔮 Resultados das Predições")
+        st.dataframe(df_input[["ID_Cliente", "Pred_Churn", "Prob_Churn"]].head(20))
 
-    # Importância das variáveis
-    importancias = rf_model.named_steps["classifier"].feature_importances_
-    feature_names_num = colunas_numericas
-    feature_names_cat = rf_model.named_steps["preprocessor"].transformers_[1][1]\
-        .named_steps["onehot"].get_feature_names_out(colunas_categoricas)
-    feature_names = list(feature_names_num) + list(feature_names_cat)
+        churn_rate = df_input["Pred_Churn"].mean() * 100
+        st.metric("Taxa de Churn Prevista", f"{churn_rate:.2f}%")
 
-    importancias_df = pd.DataFrame({
-        "Variavel": feature_names,
-        "Importancia": importancias
-    }).sort_values(by="Importancia", ascending=False).head(10)
+        # Importância das variáveis
+        importancias = rf_model.named_steps["classifier"].feature_importances_
+        feature_names_num = colunas_numericas
+        feature_names_cat = rf_model.named_steps["preprocessor"].transformers_[1][1]\
+            .named_steps["onehot"].get_feature_names_out(colunas_categoricas)
+        feature_names = list(feature_names_num) + list(feature_names_cat)
 
-    st.write("### 🔑 Top Variáveis Mais Importantes")
-    st.bar_chart(importancias_df.set_index("Variavel"))
+        importancias_df = pd.DataFrame({
+            "Variavel": feature_names,
+            "Importancia": importancias
+        }).sort_values(by="Importancia", ascending=False).head(10)
 
-
-
+        st.write("### 🔑 Top Variáveis Mais Importantes")
+        st.bar_chart(importancias_df.set_index("Variavel"))
