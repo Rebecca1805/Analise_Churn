@@ -84,6 +84,40 @@ st.set_page_config(page_title="Previsão de Churn", layout="wide")
 st.title("📊 Previsão de Churn em E-commerce")
 st.write("Faça upload de um CSV de clientes para prever risco de churn.")
 
+st.markdown("""
+**📌 Instruções para o upload:**
+- O arquivo CSV deve conter as seguintes colunas:
+  - `ID_Cliente`
+  - `Genero`
+  - `Idade`
+  - `Cidade`
+  - `Tipo_Assinatura`
+  - `Gasto_Total`
+  - `Itens_Comprados`
+  - `Nota_Media`
+  - `Desconto_Aplicado`
+  - `Dias_Sem_Compra`
+  - `Nivel_Satisfacao`
+- O app usará essas colunas para prever o risco de churn.
+""")
+
+colunas_obrigatorias = [
+    "ID_Cliente", "Genero", "Idade", "Cidade", "Tipo_Assinatura",
+    "Gasto_Total", "Itens_Comprados", "Nota_Media",
+    "Desconto_Aplicado", "Dias_Sem_Compra", "Nivel_Satisfacao"
+]
+
+if uploaded_file is not None:
+    df_input = pd.read_csv(uploaded_file)
+    
+    faltando = [c for c in colunas_obrigatorias if c not in df_input.columns]
+    if faltando:
+        st.error(f"O arquivo está faltando as colunas: {faltando}")
+    else:
+        # segue com as previsões
+        ...
+
+
 uploaded_file = st.file_uploader("Carregue o arquivo CSV", type=["csv"])
 
 if uploaded_file is not None:
@@ -136,4 +170,5 @@ if uploaded_file is not None:
 
     st.write("### 🔑 Top Variáveis Mais Importantes")
     st.bar_chart(importancias_df.set_index("Variavel"))
+
 
