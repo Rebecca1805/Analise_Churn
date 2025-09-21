@@ -41,7 +41,7 @@ preprocessor = ColumnTransformer(
 # === Treinamento do modelo (com dataset base) ===
 @st.cache_resource
 def treinar_modelo():
-    df = pd.read_csv("data/Previsao_Churn.csv")
+    df = pd.read_csv("Data/Previsao_Churn.csv")
 
     # Renomear colunas
     df.rename(columns={
@@ -136,3 +136,4 @@ if uploaded_file is not None:
 
     st.write("### 🔑 Top Variáveis Mais Importantes")
     st.bar_chart(importancias_df.set_index("Variavel"))
+
