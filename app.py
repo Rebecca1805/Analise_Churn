@@ -160,6 +160,24 @@ if uploaded_file is not None:
             "Importancia": importancias
         }).sort_values(by="Importancia", ascending=False).head(10)
 
+        st.markdown("""
+### 📝 Como interpretar os resultados
+
+- **Pred_Churn (0/1):**
+  - `1` = Cliente em risco de churn (alta chance de parar de comprar).
+  - `0` = Cliente ativo (baixa chance de churn).
+
+- **Prob_Churn:** Probabilidade calculada pelo modelo para cada cliente.
+  - Exemplo: `0.82` significa 82% de risco de churn.
+
+- **Taxa de Churn Prevista:** Percentual médio de clientes em risco.
+  - Exemplo: se for 22%, quer dizer que 22 a cada 100 clientes estão em risco.
+
+- **Variáveis Mais Importantes:** Mostra os fatores que mais pesaram no modelo.
+  - Exemplo: clientes com mais dias sem compra e baixa satisfação tendem a churnar primeiro.
+""")
+
         st.write("### 🔑 Top Variáveis Mais Importantes")
         st.bar_chart(importancias_df.set_index("Variavel"))
+
 
