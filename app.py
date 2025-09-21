@@ -132,9 +132,7 @@ if uploaded_file is not None:
     if faltando:
         st.error(f"O arquivo está faltando as colunas: {faltando}")
     else:
-        st.subheader("📋 Resumo do Dataset Carregado")
-        st.write("Dimensão:", df_input.shape)
-        st.write("Colunas:", df_input.columns.tolist())
+        # Só exibe a tabela, sem texto adicional
         st.dataframe(df_input.head())
 
         # Predições
@@ -164,3 +162,4 @@ if uploaded_file is not None:
 
         st.write("### 🔑 Top Variáveis Mais Importantes")
         st.bar_chart(importancias_df.set_index("Variavel"))
+
